@@ -1,9 +1,7 @@
-terraform {
-  backend "s3" {
-    bucket         = "S3_State_Bucket" # Replace with your S3 bucket name
-    key            = "mc-iac-eks/terraform.tfstate"
-    region         = "ap-south-1" # Or your desired default region
+backend "s3" {
+    bucket         = "mc-ias-eks" # Replace with your S3 bucket name
+    key            = "mc-iac-eks"
+    region         = "eu-north-1" # Or your desired default region
     encrypt        = true
-    dynamodb_table = "MONGODB_LOCK_TABLE" # Replace with your DynamoDB table name (must have LockID as primary key)
-  }
-}
+    dynamodb_table = "mc-iac-eks" # Replace with your DynamoDB table name (must have LockID as primary key)
+    }
