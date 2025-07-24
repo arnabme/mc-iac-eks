@@ -1,4 +1,9 @@
 terraform {
+  required_providers {
+    aws = {
+        region = "eu-north-1"
+    }
+  }
   backend "s3" {
     bucket         = "mc-ias-eks"
     key            = "mc-ias-eks"
