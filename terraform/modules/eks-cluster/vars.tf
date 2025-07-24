@@ -1,6 +1,6 @@
 variable "cluster_name" {
   description = "The name of the EKS cluster."
-  type        = string
+  type        = mc-iac-eks
 }
 
 variable "kubernetes_version" {

@@ -1,4 +1,4 @@
-name: 🚀 Deploy Dev EKS Cluster
+name: Deploy Dev EKS Cluster
 
 on:
   push:
