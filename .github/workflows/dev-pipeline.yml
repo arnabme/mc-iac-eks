@@ -1,0 +1,80 @@
+name: 🚀 Deploy Dev EKS Cluster
+
+on:
+  push:
+    branches:
+      - dev # Triggers when changes are pushed to the 'dev' branch
+  workflow_dispatch: # Allows manual trigger
+
+env:
+  TF_WORKING_DIR: ./terraform/environments/dev
+  AWS_REGION: ap-south-1 # Ensure this matches your dev environment's region
+
+jobs:
+  validate-and-plan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7 # Ensure this matches your versions.tf
+          terraform_wrapper: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Run Terraform Validate and Plan
+        run: |
+          bash scripts/validate_and_plan.sh ${{ env.TF_WORKING_DIR }} dev
+        env:
+          # Ensure your tfvars are configured in the environment directory,
+          # or pass sensitive variables via env from GitHub secrets.
+          TF_VAR_aws_cli_user_name: your-aws-cli-user-name # Replace with a generic user or specific for pipeline access if needed
+
+      - name: Upload Terraform Plan artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tfplan-dev
+          path: ${{ env.TF_WORKING_DIR }}/tfplan
+          retention-days: 1 # Retain for 1 day
+
+  apply:
+    needs: validate-and-plan
+    runs-on: ubuntu-latest
+    environment: dev # Associate with 'dev' environment in GitHub for visibility
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.5.7
+          terraform_wrapper: false
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Download Terraform Plan artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: tfplan-dev
+          path: ${{ env.TF_WORKING_DIR }}
+
+      - name: Terraform Apply
+        run: |
+          cd ${{ env.TF_WORKING_DIR }}
+          terraform apply -auto-approve tfplan
+        env:
+          TF_VAR_aws_cli_user_name: your-aws-cli-user-name

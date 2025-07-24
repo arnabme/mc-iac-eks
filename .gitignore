@@ -1,0 +1,35 @@
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfvars.json
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+override.tf
+override.tf.json
+*-override.tf
+*-override.tf.json
+.terraformrc
+terraform.rc
+
+# AWS CLI / credentials
+.aws/credentials
+
+# Go (for Terratest)
+*.exe
+*.dll
+*.so
+*.dylib
+*.o
+*.a
+*.bak
+*.test
+*.out
+/tmp
+/vendor
+.idea/
+.vscode/
+
+# Logs
+*.log
