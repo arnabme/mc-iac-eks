@@ -1,17 +1,17 @@
-terraform {
-  required_providers {
-    aws = {
-        region = "eu-north-1"
-    }
-  }
-  backend "s3" {
-    bucket         = "mc-ias-eks"
-    key            = "mc-ias-eks"
-    region         = "eu-north-1"
-    encrypt        = true
-    dynamodb_table = "mc-iac-ekse" # Optional DynamoDB table for state locking
-  }
-}
+# terraform {
+#   required_providers {
+#     aws = {
+#         region = "eu-north-1"
+#     }
+#   }
+#   backend "s3" {
+#     bucket         = "mc-ias-eks"
+#     key            = "mc-ias-eks"
+#     region         = "eu-north-1"
+#     encrypt        = true
+#     dynamodb_table = "mc-iac-ekse" # Optional DynamoDB table for state locking
+#   }
+# }
 
 
 # backend "s3" {
