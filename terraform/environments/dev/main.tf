@@ -5,7 +5,13 @@ provider "aws" {
 
 # Source the shared backend configuration
 terraform {
-  backend "s3" {} # Referenced in terraform/shared/backend.tf
+  backend "s3" {
+     bucket         = "mc-ias-eks" # Replace with your S3 bucket name
+     key            = "mc-iac-eks"
+     region         = "eu-north-1" # Or your desired default region
+     encrypt        = true
+     dynamodb_table = "mc-iac-eks" # Replace with your DynamoDB table name (must have LockID as primary key)
+  } 
 }
 
 data "aws_caller_identity" "current" {}
